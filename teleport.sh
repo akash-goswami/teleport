@@ -1,8 +1,9 @@
 #!/bin/bash
 
 function teleport () {
-    param="$(node src/index)"
-    cd "$param"
+    wd=`pwd`
+    param="$(node src/tp $@ --cwd $wd)"
+    echo "$param"
 }
 
 alias tp='teleport'
