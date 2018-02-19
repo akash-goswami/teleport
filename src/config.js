@@ -6,12 +6,12 @@ const USER_DATA =
     (process.platform == 'darwin' ? path.join(process.env.HOME, 'Library/Preferences') : '/var/local');
 
 const readFile = filePath => new Promise((res, rej) => {
-	fs.readFile(filePath, { encoding: 'utf-8' }, (err, data) => {
-		if (err) {
-			return rej(err);
-		}
-		return res(data);
-	})
+    fs.readFile(filePath, { encoding: 'utf-8' }, (err, data) => {
+        if (err) {
+            return rej(err);
+        }
+        return res(data);
+    })
 })
 
 // If config file is not create create it under teleport folder
@@ -22,16 +22,16 @@ const CONFIG_PATH = {
 };
 
 const parseConfig = async () => {
-	try {
-		let res = await readFile(CONFIG_PATH.EXEC);
-		res = JSON.parse(res);
-		return res;
-	} catch (e) {
-		throw new Error('Error: Can\'t read config file.');
-	}
+    try {
+        let res = await readFile(CONFIG_PATH.EXEC);
+        res = JSON.parse(res);
+        return res;
+    } catch (e) {
+        throw new Error('Error: Can\'t read config file.');
+    }
 }
 
 module.exports = {
-	CONFIG_PATH,
-	parseConfig
+    CONFIG_PATH,
+    parseConfig
 }

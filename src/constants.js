@@ -1,4 +1,4 @@
 module.exports = {
-	ERROR_CODE: 1,
-	SUCESS_CODE: 0
+    ERROR_CODE: 1,
+    SUCESS_CODE: 0
 }

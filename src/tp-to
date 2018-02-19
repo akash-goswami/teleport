@@ -12,31 +12,31 @@ const defaults = {
 };
 
 (async () => {
-	try {
-		const confStr = await config.parseConfig();
-		Object.assign(defaults, confStr);
-		
-		// Parse options from command line and merge with the default working config.
-		prog.usage('[options] [path ...]')
-		options.parse(options.to).forEach(op => prog.option(...op));
-		prog.parse(process.argv);
-		const payload = options.merge(defaults, options.to, prog);
+    try {
+        const confStr = await config.parseConfig();
+        Object.assign(defaults, confStr);
+        
+        // Parse options from command line and merge with the default working config.
+        prog.usage('[options] [path ...]')
+        options.parse(options.to).forEach(op => prog.option(...op));
+        prog.parse(process.argv);
+        const payload = options.merge(defaults, options.to, prog);
 
-		if (!payload.cwd) {
-			// If current working dir not found, raise an error
-			throw new Error('Script not called correctly. Current working directory not found.');
-		}
-		if (prog.args.length !== 1) {
-			// If not found print in the console
-			throw new Error('Too many or too little arguments.');
-		}
-		
-		// Get the full or fragmented file name to be searched.
-		payload.target = prog.args[0];
+        if (!payload.cwd) {
+            // If current working dir not found, raise an error
+            throw new Error('Script not called correctly. Current working directory not found.');
+        }
+        if (prog.args.length !== 1) {
+            // If not found print in the console
+            throw new Error('Too many or too little arguments.');
+        }
+        
+        // Get the full or fragmented file name to be searched.
+        payload.target = prog.args[0];
 
-		const res = await service.execute(service.search, payload);
-		console.log(res); 
-	} catch (e) {
-		console.error(`${CONSTANTS.ERROR_CODE};${e.message}`);
-	}
+        const res = await service.execute(service.search, payload);
+        console.log(res); 
+    } catch (e) {
+        console.error(`${CONSTANTS.ERROR_CODE};${e.message}`);
+    }
 })();
