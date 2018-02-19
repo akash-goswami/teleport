@@ -1,0 +1,23 @@
+{
+  "name": "teleport",
+  "version": "1.0.0",
+  "description": "While in dev source the script file to use it from terminal.",
+  "main": "tp.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akash-goswami/teleport.git"
+  },
+  "author": "Akash Goswami <akash00goswami@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/akash-goswami/teleport/issues"
+  },
+  "homepage": "https://github.com/akash-goswami/teleport#readme",
+  "dependencies": {
+    "commander": "^2.14.1",
+    "glob": "^7.1.2"
+  }
+}
