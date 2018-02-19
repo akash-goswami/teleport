@@ -1,0 +1,6 @@
+{
+    "exlude": [
+        "**/node_modules/**",
+        "**/.git/**"
+    ]
+}
