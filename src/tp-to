@@ -36,7 +36,6 @@ const defaults = {
         payload.target = utils.normalizeTarget(prog.args[0]);
 
         const res = await service.execute(service.search, payload);
-        console.log(res);
         const resWithStat = await service.execute(service.stats, Object.assign({ files: res }, payload));
         const onlyDirs = resWithStat
             .filter(fileStat => fileStat.isDir)
