@@ -5,6 +5,7 @@ const options = require('./options');
 const CONSTANTS = require('./constants');
 const service = require('./service');
 const config = require('./config');
+const utils = require('./utils');
 const defaults = {
     cwd: null,
     upstream: false,
@@ -32,10 +33,20 @@ const defaults = {
         }
         
         // Get the full or fragmented file name to be searched.
-        payload.target = prog.args[0];
+        payload.target = utils.normalizeTarget(prog.args[0]);
 
         const res = await service.execute(service.search, payload);
-        console.log(res); 
+        console.log(res);
+        const resWithStat = await service.execute(service.stats, Object.assign({ files: res }, payload));
+        const onlyDirs = resWithStat
+            .filter(fileStat => fileStat.isDir)
+            .map(fileStat => fileStat.file);
+
+        if (!onlyDirs.length) {
+            throw new Error('No matching dir name found');
+        }
+
+        console.log(`${CONSTANTS.SUCCESS_CODE_CTRL};${onlyDirs[0]}`); 
     } catch (e) {
         console.error(`${CONSTANTS.ERROR_CODE};${e.message}`);
     }
