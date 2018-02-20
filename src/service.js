@@ -24,7 +24,7 @@ service.search = payload => {
             ]);
         })
     } else {
-        // Search for the target towards the up direction from the current location. This
+        // Search for the target towards the down direction from the current location. This
         // traversing forms a tree. All the path along the tree is searched
         return new Promise((res, rej) => {
             glob(payload.target, {
