@@ -1,5 +1,7 @@
 const glob = require('glob');
-
+const minimatch = require('minimatch');
+const fs = require('fs');
+const path = require('path');
 const service = {};
 
 service.search = payload => {
@@ -7,7 +9,19 @@ service.search = payload => {
         // Search for the target towards the up direction from the current location. This
         // traversing is singular path traversing. Traverse path can be represented as a straingt line.
         return new Promise ((res, rej) => {
-            
+            const cwd = payload.cwd;
+            const pathArr = cwd.split(path.sep);
+            const optns = { matchBase: true };
+            const matches = [];
+            let i;
+            for (i = pathArr.length - 1; i >= 0; i--) {
+                if (minimatch(path.join(...pathArr.slice(i)) + path.sep, payload.target, optns)) {
+                    break;
+                }
+            }
+            return res([
+                Array.from({length: pathArr.length - i - 1}).map(() => '..').join(path.sep) + path.sep
+            ]);
         })
     } else {
         // Search for the target towards the up direction from the current location. This
@@ -23,6 +37,24 @@ service.search = payload => {
                 return res(files);
             })
         });
+    }
+}
+
+service.stats = payload => {
+    if (payload.upstream) {
+        return Promise.all(payload.files.map(file => new Promise((res, rej) => {
+            // Upstream will always be dir
+            return res({file: file, isDir: true});
+        })));
+    } else {
+        return Promise.all(payload.files.map(file => new Promise((res, rej) => {
+            fs.lstat(file, (err, stat) => {
+                if (err) {
+                    return res(null);
+                }
+                return res({ file: file, isDir: stat.isDirectory() });
+            })
+        })));
     }
 }
 
