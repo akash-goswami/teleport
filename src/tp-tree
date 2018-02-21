@@ -1,0 +1,56 @@
+#!/usr/bin/env node
+
+const prog = require('commander');
+const options = require('./options');
+const CONSTANTS = require('./constants');
+const config = require('./config');
+const utils = require('./utils');
+const possibilities = require('./possibilities');
+const tree = require('./tree');
+const defaults = {
+    cwd: null,
+    target: null
+};
+
+(async () => {
+    try {
+        const confStr = await config.parseConfig();
+        Object.assign(defaults, confStr);
+        
+        // Parse options from command line and merge with the default working config.
+        prog.usage('[options] [path ...]')
+        options.parse(options.tree).forEach(op => prog.option(...op));
+        prog.parse(process.argv);
+        
+        // Merge the config to create defaults
+        const payload = options.merge(defaults, options.tree, prog);
+        
+        if (prog.args.length >= 2) {
+            console.log(prog.args);
+            // If not found print in the console
+            throw new Error('Too many arguments.');
+        } else if (!prog.args.length) {
+            // Search all possibilities
+            payload.target = '**';
+            payload.fullTree = true;
+        } else {
+            // only 1 argument is provided use it to source target
+            payload.target = utils.normalizeTarget(prog.args[0]);
+        }
+
+        // Get the full or fragmented file name to be searched in downstream direction.
+        // While creating tree upstream possiblities are ignored as its a straight path.
+        payload.upstream = false;
+        const respDown = await possibilities(payload);
+        const treeStruct = tree.make(payload.cwd, respDown, payload);
+        tree.draw(treeStruct);
+
+        // if (!upstreamResp.length) {
+        //     throw new Error('No matching dir name found');
+        // }
+
+        // console.log(respDown); 
+    } catch (e) {
+        console.error(`${CONSTANTS.ERROR_CODE};${e.stack}`);
+    }
+})();
