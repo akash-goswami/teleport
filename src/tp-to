@@ -3,9 +3,9 @@
 const prog = require('commander');
 const options = require('./options');
 const CONSTANTS = require('./constants');
-const service = require('./service');
 const config = require('./config');
 const utils = require('./utils');
+const possibilities = require('./possibilities');
 const defaults = {
     cwd: null,
     upstream: false,
@@ -21,31 +21,24 @@ const defaults = {
         prog.usage('[options] [path ...]')
         options.parse(options.to).forEach(op => prog.option(...op));
         prog.parse(process.argv);
-        const payload = options.merge(defaults, options.to, prog);
 
-        if (!payload.cwd) {
-            // If current working dir not found, raise an error
-            throw new Error('Script not called correctly. Current working directory not found.');
-        }
+        // Merge the config to create defaults
+        const payload = options.merge(defaults, options.to, prog);
+        
         if (prog.args.length !== 1) {
             // If not found print in the console
             throw new Error('Too many or too little arguments.');
         }
-        
+
         // Get the full or fragmented file name to be searched.
         payload.target = utils.normalizeTarget(prog.args[0]);
+        const resp = await possibilities(payload);
 
-        const res = await service.execute(service.search, payload);
-        const resWithStat = await service.execute(service.stats, Object.assign({ files: res }, payload));
-        const onlyDirs = resWithStat
-            .filter(fileStat => fileStat.isDir)
-            .map(fileStat => fileStat.file);
-
-        if (!onlyDirs.length) {
+        if (!resp.length) {
             throw new Error('No matching dir name found');
         }
 
-        console.log(`${CONSTANTS.SUCCESS_CODE_CTRL};${onlyDirs[0]}`); 
+        console.log(`${CONSTANTS.SUCCESS_CODE_CTRL};${resp[0]}`); 
     } catch (e) {
         console.error(`${CONSTANTS.ERROR_CODE};${e.message}`);
     }
