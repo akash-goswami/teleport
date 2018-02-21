@@ -1,6 +1,7 @@
 {
-    "exlude": [
+    "exclude": [
         "**/node_modules/**",
         "**/.git/**"
-    ]
+    ],
+    "treespan": 5
 }
