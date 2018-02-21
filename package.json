@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/akash-goswami/teleport#readme",
   "dependencies": {
+    "chalk": "^2.3.1",
     "commander": "^2.14.1",
     "glob": "^7.1.2",
     "minimatch": "^3.0.4"
