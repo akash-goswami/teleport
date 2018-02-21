@@ -42,17 +42,17 @@ service.search = payload => {
 
 service.stats = payload => {
     if (payload.upstream) {
-        return Promise.all(payload.files.map(file => new Promise((res, rej) => {
+        return Promise.all(payload.name.map(file => new Promise((res, rej) => {
             // Upstream will always be dir
-            return res({file: file, isDir: true});
+            return res({name: file, isDir: true});
         })));
     } else {
-        return Promise.all(payload.files.map(file => new Promise((res, rej) => {
+        return Promise.all(payload.name.map(file => new Promise((res, rej) => {
             fs.lstat(file, (err, stat) => {
                 if (err) {
                     return res(null);
                 }
-                return res({ file: file, isDir: stat.isDirectory() });
+                return res({ name: file, isDir: stat.isDirectory() });
             })
         })));
     }
