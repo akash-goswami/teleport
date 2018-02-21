@@ -4,6 +4,9 @@ const options = {
         ['w', 'cwd', 'Working dir', toStr, ''],
         ['u', 'upstream', 'Find file in upstream until the file is found']
     ],
+    tree: [
+        ['w', 'cwd', 'Working dir', toStr, '']
+    ],
     parse: opts => opts.map(op => {
         const resp = [];
         let short = `-${op[0]}`,
