@@ -32,14 +32,16 @@ const defaults = {
 
         // Get the full or fragmented file name to be searched.
         payload.target = utils.normalizeTarget(prog.args[0]);
+        payload.rawTarget = prog.args[0];
         const resp = await possibilities(payload);
 
         if (!resp.length) {
             throw new Error('No matching dir name found');
         }
 
+        config.writeHist(config.type.CMD_HIST, resp[0]);
         console.log(`${CONSTANTS.SUCCESS_CODE_CTRL};${resp[0]}`); 
     } catch (e) {
-        console.error(`${CONSTANTS.ERROR_CODE};${e.message}`);
+        console.error(`${CONSTANTS.ERROR_CODE};${e.stack}`);
     }
 })();
