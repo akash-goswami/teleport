@@ -45,13 +45,7 @@ const defaults = {
         const treeStruct = tree.make(payload.cwd, respDown, payload);
         tree.draw(treeStruct);
         const linearFormat = tree.toLinearFormat(treeStruct);
-        await config.writeHist(config.type.LINTREE_HIST, linearFormat);
-        
-        // if (!upstreamResp.length) {
-        //     throw new Error('No matching dir name found');
-        // }
-
-        // console.log(respDown); 
+        await config.writeHist(config.type.LINTREE_HIST, linearFormat); 
     } catch (e) {
         console.error(`${CONSTANTS.ERROR_CODE};${e.stack}`);
     }
