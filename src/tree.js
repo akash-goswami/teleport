@@ -41,6 +41,7 @@ class Node {
         this.hid = null; // Hierarchical ID
         this.lid = null; // Level ID
         this.parent = null;
+        this.relPath = null;
     }
 
     _getNextHierarchicalID () {
@@ -51,6 +52,7 @@ class Node {
         this.children.push(node);
         node.parent = this;
         node.hid = this._getNextHierarchicalID();
+        node.relPath = `${this.relPath}${this.relPath === '' ? '' : path.sep}${node.name}`;
         return this;
     }
 
@@ -61,7 +63,8 @@ class Node {
     pivot () {
         this.config.pivot = true;
         this.hid = 0;
-        this.lid = [0,0];
+        this.lid = [0, 0];
+        this.relPath = '';
         return this;
     }
 
@@ -136,5 +139,14 @@ module.exports = {
         const tree = maker.getTree();
         return tree;
     },
-    draw: printTree
+    draw: printTree,
+    toLinearFormat: node => {
+        const format = [];
+        (function rec (n) {
+            format.push([n.lid.join('.'), n.hid, n.name, n.relPath]);
+            n.children.forEach(cn => rec(cn));
+        })(node);
+
+        return format;
+    }
 }
