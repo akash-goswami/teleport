@@ -2,7 +2,8 @@ const toStr = str => str.toString();
 const options = {
     to: [
         ['w', 'cwd', 'Working dir', toStr, ''],
-        ['u', 'upstream', 'Find file in upstream until the file is found']
+        ['u', 'upstream', 'find file in upstream until the file is found'],
+        ['t', 'tree', 'find path from tree index']
     ],
     tree: [
         ['w', 'cwd', 'Working dir', toStr, '']
