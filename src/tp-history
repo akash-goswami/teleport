@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+
+const prog = require('commander');
+const options = require('./options');
+const CONSTANTS = require('./constants');
+const minimatch = require('minimatch');
+const config = require('./config');
+const utils = require('./utils');
+const possibilities = require('./possibilities');
+const tree = require('./tree');
+const chalk = require('chalk');
+const defaults = {
+    cwd: null,
+    target: null,
+    limit: null
+};
+
+(async () => {
+    try {
+        const confStr = await config.parseConfig();
+        Object.assign(defaults, confStr);
+        
+        // Parse options from command line and merge with the default working config.
+        prog.usage('[options] [path ...]')
+        options.parse(options.history).forEach(op => prog.option(...op));
+        prog.parse(process.argv);
+        
+        // Merge the config to create defaults
+        const payload = options.merge(defaults, options.history, prog);
+        let data = await config.parseHist(config.type.CMD_HIST);
+        data = data.map(item => item[0]).map((item, i) => [i, item]);
+        
+        if (prog.args.length) {
+            payload.target = utils.normalizeTarget(prog.args[0]);
+            data = data.filter(d => minimatch(d[1], payload.target));
+        }
+
+        data = data.slice(0, payload.limit);
+        console.log(data.map(d => chalk`{blue ${d[0]} } ${d[1]}`).join('\n'));
+    } catch (e) {
+        console.error(`${CONSTANTS.ERROR_CODE};${e.stack}`);
+    }
+})();
