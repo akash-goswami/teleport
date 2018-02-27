@@ -8,6 +8,10 @@ const options = {
     tree: [
         ['w', 'cwd', 'Working dir', toStr, '']
     ],
+    history: [
+        ['w', 'cwd', 'Working dir', toStr, ''],
+        ['n', 'limit', 'Decide how many enties from history it should pick up', parseInt, 10]
+    ],
     parse: opts => opts.map(op => {
         const resp = [];
         let short = `-${op[0]}`,
