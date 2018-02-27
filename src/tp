@@ -6,7 +6,7 @@ prog
     .version('1.0.0')
     .description('Teleport from current working directory to other working directory')
     .command('to [folders]', 'teleport to folder name or fragment')
-    // .command('history', 'show teleporting history with identifiers').alias('h')
+    .command('history', 'show teleporting history with identifiers').alias('h')
     // .command('last', 'teleport to the last known place').alias('l')
     // .command('config', 'show teleporting config')
     .command('tree', 'show teleporting possibilities with given path')
