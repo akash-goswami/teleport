@@ -26,7 +26,6 @@ const defaults = {
         const payload = options.merge(defaults, options.tree, prog);
         
         if (prog.args.length >= 2) {
-            console.log(prog.args);
             // If not found print in the console
             throw new Error('Too many arguments.');
         } else if (!prog.args.length) {
