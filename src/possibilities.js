@@ -1,5 +1,6 @@
 const service = require('./service');
 const config = require('./config');
+const utils = require('./utils');
 
 module.exports = async payload => {
     if (!payload.cwd) {
@@ -15,6 +16,6 @@ module.exports = async payload => {
         const resWithStat = await service.execute(service.stats, Object.assign({ name: res }, payload));
         return resWithStat
             .filter(fileStat => fileStat.isDir)
-            .map(fileStat => fileStat.name);
+            .map(fileStat => utils.normalizePathEnd(fileStat.name));
     }
 }
