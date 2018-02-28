@@ -3,19 +3,33 @@ const config = require('./config');
 const utils = require('./utils');
 
 module.exports = async payload => {
+    let index,
+        res;
     if (!payload.cwd) {
         // If current working dir not found, raise an error
         throw new Error('Script not called correctly. Current working directory not found.');
     }
     
-    if (payload.tree) {
-        const data = await config.parseHist(config.type.LINTREE_HIST);
-        return [data[payload.rawTarget]];
+    if (payload.index) {
+        index = payload.rawTarget.split('.');
+        if (index.length === 1) {
+            // comment history
+            const data = await config.parseHist(config.type.CMD_HIST);
+            res = [data[payload.rawTarget]]; 
+        } else {
+            // tree history
+            const data = await config.parseHist(config.type.LINTREE_HIST);
+            res = [data[payload.rawTarget]];
+        }
+        
     } else {
-        const res = await service.execute(service.search, payload);
-        const resWithStat = await service.execute(service.stats, Object.assign({ name: res }, payload));
-        return resWithStat
+        const serviceRes = await service.execute(service.search, payload);
+        const resWithStat = await service.execute(service.stats, Object.assign({ name: serviceRes }, payload));
+        res = resWithStat
             .filter(fileStat => fileStat.isDir)
-            .map(fileStat => utils.normalizePathEnd(fileStat.name));
+            .map(fileStat => fileStat.name)
+        
     }
+
+    return res.map(res => utils.normalizePathEnd(res));
 }
