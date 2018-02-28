@@ -3,7 +3,7 @@ const options = {
     to: [
         ['w', 'cwd', 'Working dir', toStr, ''],
         ['u', 'upstream', 'find file in upstream until the file is found'],
-        ['t', 'tree', 'find path from tree index']
+        ['i', 'index', 'find path from tree or history index']
     ],
     tree: [
         ['w', 'cwd', 'Working dir', toStr, '']
