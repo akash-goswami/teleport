@@ -74,7 +74,11 @@ const parseConfig = async () => {
 const parseHist = async type => {
     try {
         let res = await readFile(CONFIG_PATH[type]);
-        res = res.split('\n').filter(line => !!line.trim()).map(line => line.split(' '));
+        res = res
+                .split('\n')
+                .map(line => line.trim())
+                .filter(line => !!line)
+                .map(line => line.split(' '));
         return parser[type](res);
     } catch (e) {
         throw new Error('Error: Can\'t read config file.');
