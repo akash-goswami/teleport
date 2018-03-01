@@ -31,10 +31,12 @@ const defaults = {
         } else if (!prog.args.length) {
             // Search all possibilities
             payload.target = '**';
+            payload.rawTarget = '';
             payload.fullTree = true;
         } else {
             // only 1 argument is provided use it to source target
             payload.target = utils.normalizeTarget(prog.args[0]);
+            payload.rawTarget = prog.args[0]
         }
 
         // Get the full or fragmented file name to be searched in downstream direction.
